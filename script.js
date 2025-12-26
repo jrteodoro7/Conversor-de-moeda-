@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const convertButton = document.getElementById('convertButton');
     const resultArea = document.getElementById('resultArea');
 
-    // Usaremos uma API pública alternativa do AwesomeAPI
+    // Usaremos uma API pública alternativa e mais estável do AwesomeAPI
     const API_URL = 'economia.awesomeapi.com.br';
 
     async function convertCurrency() {
@@ -20,15 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
         resultArea.textContent = 'Carregando cotação...';
 
         try {
-            // A URL completa será algo como: economia.awesomeapi.com.brUSD
-            const response = await fetch(`${API_URL}${currencyTo}`);
+            // A NOVA URL completa será algo como: economia.awesomeapi.com.brBRL-USD
+            const response = await fetch(`${API_URL}${currencyFrom}-${currencyTo}`);
             
             if (!response.ok) {
-                throw new Error(`Erro de rede: ${response.status}. Servidor pode estar instável.`);
+                // A mensagem de erro agora reflete o que você vê na imagem (404)
+                throw new Error(`Erro de rede: ${response.status}. URL da API não encontrada ou servidor instável.`);
             }
 
             const data = await response.json();
-            // A chave do objeto retornado é dinâmica (ex: 'BRLUSD')
             const currencyKey = `${currencyFrom}${currencyTo}`; 
             const rate = parseFloat(data[currencyKey].high); // Pegar o valor da cotação
 
@@ -42,6 +42,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     convertButton.addEventListener('click', convertCurrency);
-    // Chama a função uma vez ao carregar a página
     convertCurrency(); 
 });
