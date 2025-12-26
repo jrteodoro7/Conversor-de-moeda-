@@ -1,18 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Selecionar elementos do DOM
     const amountInput = document.getElementById('amount');
     const currencyToSelect = document.getElementById('currencyTo');
     const convertButton = document.getElementById('convertButton');
     const resultArea = document.getElementById('resultArea');
 
-    // Chave de API extraída do seu print
-    const API_KEY = '6f82dd0ec8b67bc0fe563c50'; 
+    // Usaremos uma API pública alternativa do AwesomeAPI
+    const API_URL = 'economia.awesomeapi.com.br';
 
-    // Função principal que faz a conversão
     async function convertCurrency() {
         const amount = amountInput.value;
         const currencyTo = currencyToSelect.value;
-        const currencyFrom = 'BRL'; // Nossa moeda base é sempre o Real
+        const currencyFrom = 'BRL';
 
         if (amount <= 0 || isNaN(amount)) {
             resultArea.textContent = 'Por favor, insira um valor válido.';
@@ -22,22 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
         resultArea.textContent = 'Carregando cotação...';
 
         try {
-            // URL da API usando sua chave
-            const response = await fetch(`v6.exchangerate-api.com{API_KEY}/latest/${currencyFrom}`);
+            // A URL completa será algo como: economia.awesomeapi.com.brUSD
+            const response = await fetch(`${API_URL}${currencyTo}`);
             
             if (!response.ok) {
-                // Se a API retornar um erro (ex: 403 Forbidden se a chave for inválida)
-                throw new Error(`Erro de comunicação com a API: ${response.status}. Verifique se a chave está ativa.`);
+                throw new Error(`Erro de rede: ${response.status}. Servidor pode estar instável.`);
             }
 
             const data = await response.json();
-
-            // A nova API retorna um objeto de taxas (conversion_rates)
-            const rate = data.conversion_rates[currencyTo]; 
-
-            if (!rate) {
-                throw new Error(`Cotação para ${currencyTo} não encontrada.`);
-            }
+            // A chave do objeto retornado é dinâmica (ex: 'BRLUSD')
+            const currencyKey = `${currencyFrom}${currencyTo}`; 
+            const rate = parseFloat(data[currencyKey].high); // Pegar o valor da cotação
 
             const convertedAmount = amount * rate;
             resultArea.textContent = `Resultado: ${convertedAmount.toFixed(2)} ${currencyTo}`;
@@ -49,5 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     convertButton.addEventListener('click', convertCurrency);
-    convertCurrency();
+    // Chama a função uma vez ao carregar a página
+    convertCurrency(); 
 });
