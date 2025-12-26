@@ -35,8 +35,7 @@ h1 {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    box-sizing: border-box; /* Garante que o padding não aumente a largura total */
-    margin-bottom: 10px;
+    box-sizing: border-box; 
 }
 
 .converter-box button {

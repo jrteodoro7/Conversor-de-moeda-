@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const convertButton = document.getElementById('convertButton');
     const resultArea = document.getElementById('resultArea');
 
-    // Usaremos uma API pública alternativa e mais estável do AwesomeAPI
     const API_URL = 'economia.awesomeapi.com.br';
 
     async function convertCurrency() {
@@ -20,11 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
         resultArea.textContent = 'Carregando cotação...';
 
         try {
-            // A NOVA URL completa será algo como: economia.awesomeapi.com.brBRL-USD
             const response = await fetch(`${API_URL}${currencyFrom}-${currencyTo}`);
             
             if (!response.ok) {
-                // A mensagem de erro agora reflete o que você vê na imagem (404)
                 throw new Error(`Erro de rede: ${response.status}. URL da API não encontrada ou servidor instável.`);
             }
 
